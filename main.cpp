@@ -4,6 +4,7 @@
 #include "DatasetsConfig.hpp"
 #include "ExtrasSetups_ParallelLaser.hpp"
 #include "ExtrasSetups_ToF.hpp"
+#include "SanityTestsSetups_ParallelLaser.hpp"
 #include "Types.hpp"
 #include "spirallolib.hpp"
 
@@ -111,21 +112,6 @@ int main(int argc, char* argv[])
 
     //    framesToProcess = framesToProcess_small_dataset;
 
-    framesToProcess = {{RecordingId::Jim8, ALL_FRAME_IDS}};
-
-    FrameIds_t jim8frames;
-    for (int i = 328; i <= 1849; ++i)
-    {
-        jim8frames.insert(i);
-    }
-    framesToProcess = {{RecordingId::Jim8, jim8frames}};
-
-    framesToProcess = {{RecordingId::iPEK2Short, {}}};
-
-    framesToProcess = {{RecordingId::Jim11_18in_lab, {}},
-                       {RecordingId::Jim12_24in_lab, {}},
-                       {RecordingId::Jim13_32in_lab, {}}};
-
     std::map<RecordingId, std::set<unsigned>> framesToProcess_remaining_for_tests{
         //        {RecordingId::Jim7, {100}},
         {RecordingId::Talha1, ALL_FRAME_IDS},
@@ -138,19 +124,7 @@ int main(int argc, char* argv[])
 
     // framesToProcess = framesToProcess_remaining_for_tests;
 
-    // framesToProcess = {{RecordingId::Philipp38, ALL_FRAME_IDS}};
-    // framesToProcess = {{RecordingId::Jim11_18in_lab, ALL_FRAME_IDS}};
-    // framesToProcess = {{RecordingId::Talha7_RCX100, ALL_FRAME_IDS}};
-    // framesToProcess = {{RecordingId::Talha8_RCX100, ALL_FRAME_IDS}};
-    // framesToProcess = {{RecordingId::Talha9_RCX100, ALL_FRAME_IDS}};
-    framesToProcess = {{RecordingId::Dobrzanski3d, ALL_FRAME_IDS}};
-
     framesToProcess = {{RecordingId::Extras1, ALL_FRAME_IDS}};
-    // framesToProcess = {{RecordingId::Extras1, {3100, 3144, 3600, 3665, 3668,
-    // 3671, 3674, 3677, 3800, 3900, 13341, 13374}}}; framesToProcess =
-    // {{RecordingId::Extras1, {3100, 3144}}}; framesToProcess =
-    // {{RecordingId::Philipp20, ALL_FRAME_IDS}};
-    framesToProcess = {{RecordingId::Extras1, ALL_FRAME_IDS}}; // {72380}
 
     setup = "NONE";
     AnalysisTarget analysisTarget{AnalysisTarget::LASER_SPOT_POSITIONS};
@@ -234,14 +208,12 @@ int main(int argc, char* argv[])
 
     // ------
 
-    auto runMode{RunMode::Tof};
+    auto runMode{RunMode::DistancesPxToObj};
     // VideoToObj | FrameAnalysis | DistancesPxToObj | CsvToObj | VideoSplit |
     // VerifyVideoExtractor | VideoToObjNoTime | Tof
 
     // ==================================
     // ==================================
-
-    //    WinCan::Spirallo::initializeLogger();
 
     auto recordings{getRecordingsData()};
     for (const auto& [recordingId, frameIds] : framesToProcess)
@@ -302,78 +274,7 @@ int main(int argc, char* argv[])
             // NOTE: Here you can manually override the default configuration.
 
             // ------------------------
-
-            // std::filesystem::path
-            // rootDir{"D:/Projects/Spirallo/Videos/Tomasz_Dobrzanski/2025_03_20_r1"};
-            // std::string
-            // recordingStem{"sec5_f64a49cb-0185-40fc-9bd2-b89bdf93bb16ad672cc2-7dc8-47a4-b493-ae8e53738f86"};
-            // videoPath = rootDir / (recordingStem + ".mp4");
-            // vifPath = rootDir / (recordingStem + ".txt");
-            // cameraName = "Ipek RCX100";
-
-            // imageProcessingConfigPath = rootDir/ "ParallelLaserPresets.json";
-
-            // distancesCsvFilepath = rootDir /
-            // "spirallo_output_20250321_121728_dist_px_1.csv";
-            // videoParametersFilepath = rootDir /
-            // "spirallo_output_20250321_121728_video_params_1.json";
-
-            // stopTime = 2.0;
-
-            // ------------------------
-
-            // std::filesystem::path
-            // rootDir{"D:/Projects/Spirallo/Videos/Marcin/High_Speed_Spirallo
-            // [2025-03-25]/Video/Sec"}; std::string recordingStem{"speed and camera
-            // 100% Aperture
-            // +3_27889ac2-fd4c-4d42-ab2f-808e0cbce9f805d7c172-33b2-4d99-916a-c84587f4aabf"};
-            // videoPath = rootDir / (recordingStem + ".mp4");
-            // vifPath = rootDir / (recordingStem + ".txt");
-            // cameraName = "Ipek RCX100";
-
-            // imageProcessingConfigPath = rootDir/ "ParallelLaserPresets.json";
-
-            // distancesCsvFilepath = rootDir /
-            // "spirallo_output_20250321_121728_dist_px_1.csv";
-            // videoParametersFilepath = rootDir /
-            // "spirallo_output_20250321_121728_video_params_1.json";
-
-            // ------------------------
-
-            // std::filesystem::path
-            // rootDir{"D:/Projects/Spirallo/Videos/Tomasz_Dobrzanski/2025_03_20_r1"};
-            // std::string
-            // recordingStem{"sec5_f64a49cb-0185-40fc-9bd2-b89bdf93bb16ad672cc2-7dc8-47a4-b493-ae8e53738f86"};
-            // videoPath = rootDir / (recordingStem + ".mp4");
-            // vifPath = rootDir / (recordingStem + ".txt");
-
-            // std::filesystem::path
-            // rootConfDir{"D:/Projects/Spirallo/Videos/_PLAYGROUND"};
-
-            // cameraConfigPath = rootConfDir / "ParallelLaserDevices.json";
-            // imageProcessingConfigPath = rootConfDir / "ParallelLaserPresets.json";
-            // cameraName = "RCX90 HD xx";
-
-            // ------------------------
-
-            std::filesystem::path rootDir{"D:/Projects/Spirallo/Videos/EXTRAS/"
-                                          "3-28-2025 CELEBRATION/Video/Sec/"};
-            std::string recordingStem{
-                "4_8_2025 11_57_04 "
-                "AM_fa041f15-5712-43e2-8011-d8d0f1b4c75f369de82a-bc74-4ea2-98dc-"
-                "46f761f74b0b"};
-            videoPath = rootDir / (recordingStem + ".mp4");
-            vifPath = rootDir / (recordingStem + ".txt");
-
-            // std::filesystem::path
-            // rootConfDir{"D:/Projects/Spirallo/Videos/_PLAYGROUND"};
-            // cameraConfigPath = rootConfDir / "ParallelLaserDevices.json";
-            // imageProcessingConfigPath = rootConfDir / "ParallelLaserPresets.json";
-            cameraName = "Ipek RCX90 new";
-
-            // startTime = 20.0;
-            // stopTime = 25.0;
-
+            // ParallelLaser Setup
             // ------------------------
             // setupKeithP002a | setup_VideoWithDefect | setup_badSign |
             // setup_WVX_10902 | setup_Kamil_2025_07_15_rejections
@@ -388,52 +289,42 @@ int main(int argc, char* argv[])
             // setup_no_cross_sections_20250729
             // setup_hang_on_exec_finished | setup_peak_1|2|3 |
             // setup_speed_20250923_RCX100_100p
-            setup_augmentation_worse_rcx100hdv_s1(recordingIdStr,
-                                                  videoPath,
-                                                  vifPath,
-                                                  cameraName,
-                                                  projectDistanceUnit,
-                                                  startTime,
-                                                  stopTime,
-                                                  crossSectionsDistancesAlongPipe,
-                                                  imageProcessingConfigPath,
-                                                  cameraConfigPath,
-                                                  framesOutputDir,
-                                                  calibrationSlope,
-                                                  calibrationIntercept,
-                                                  robotCsvFile,
-                                                  distancesCsvFilepath,
-                                                  videoParametersFilepath);
+            // setup_2025_12_22_spir_AM_RCX100_joy_speed_100_crawler_100
+            // setup_1040045201HA90_sec3
+            // setup_2026_01_14_Spirallo_Laser_VX_18_1_RCX100_H_crawler_20p_camera_100p
+            // setup_AU_20260209_spikes | setup_AU_20260209_vif_error
+            // setup_AU_20260209_SPR_13_crash_A
+            // setup_AU_20260209_SPR_13_crash_sec_6_2_to_5_2
+            // setup_AU_20260209_SPR_13_crash_sec_2_2_to_ex_1_2
+            // --- Sanity tests ---
+            // setup_SanityTest__2026_01_14_Spirallo_Laser_VX_18_1__crawler20p_camera50p
+            // setup_SanityTest__2026_01_14_Spirallo_Laser_VX_18_1__crawler50p_camera70p
+            // setup_SanityTest__2026_01_14_Spirallo_Laser_VX_18_1__crawler70p_camera70p
+            // setup_SanityTest__2026_01_14_Spirallo_Laser_VX_18_1__crawler80p_camera70p
+            // setup_SanityTest__2026_01_14_Spirallo_Laser_VX_18_1__crawler90p_camera70p
+            // setup_SanityTest__1040045201HA90
+            // setup_SanityTest__VX_17_6__RCX90_crawler20p_camera100p
+            // setup_SanityTest__VX_17_6__RCX90X_crawler20p_camera100p
+            // setup_SanityTest__VX_17_6__RCX100_crawler20p_camera100p
+            // SPR-17: setup_peak_3 ; setup_Jacsonville
+            // SPR-20: setup_SanityTest__2026_01_14_Spirallo_Laser_VX_18_1__crawler70p_camera70p
+            setup_SPR23_Sec1(recordingIdStr,
+                             videoPath,
+                             vifPath,
+                             cameraName,
+                             projectDistanceUnit,
+                             startTime,
+                             stopTime,
+                             crossSectionsDistancesAlongPipe,
+                             imageProcessingConfigPath,
+                             cameraConfigPath,
+                             framesOutputDir,
+                             calibrationSlope,
+                             calibrationIntercept,
+                             robotCsvFile,
+                             distancesCsvFilepath,
+                             videoParametersFilepath);
         }
-
-        // if (setup == "RCX100")
-        // {
-        //     stopTime = 2.0;
-        // }
-        // if (setup == "Tomasz3a")
-        // {
-        //     startTime = 3.0;
-        //     stopTime = 31.0;
-        // }
-
-        // if (setup == "Talha5_DN400_Ref1")
-        // {
-        //     // stopTime = 10.0;
-        //     cameraName = "Ipek RCX90 new";
-        // }  else if (setup == "Talha6")
-        // {
-        //     cameraConfigPath =
-        //     fs::path{"C:/Development/Spirallo/configs/ParallelLaserDevices_NoLensDistortion.json"};
-        //     calibrationSlope = 0.017;
-        //     calibrationIntercept = 1802.67;
-        // } else if (setup == "Philipp40")
-        // {
-        //     startTime = 0.30000001192092896;
-        //     stopTime = 54.400001525878906;
-        //     stopTime = 3.0;
-        // } else if (setup == "dummy1") {
-        //     stopTime = 5.0;
-        // }
 
         std::cout << "Processing recording (actual): " << recordingIdStr << std::endl;
 
@@ -516,6 +407,9 @@ int main(int argc, char* argv[])
                     ? std::make_optional<WinCan::Spirallo::TimeSpan>(startTime, stopTime)
                     : std::nullopt};
 
+            // FIXME: Debug.
+            timeSpan = std::nullopt;
+
             res = WinCan::Spirallo::Analyzer::analyzeVideoFrames(videoPath.string(),
                                                                  frameIds,
                                                                  vifPath.string(),
@@ -562,7 +456,6 @@ int main(int argc, char* argv[])
             for (const auto& tofDataPath : tofFiles)
             {
                 res = WinCan::Spirallo::generatePipeGeometryObjFileFromTofData(
-                    vifPath.string(),
                     tofDataPath.string(),
                     outputDir.string(),
                     std::nullopt,

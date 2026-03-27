@@ -8,10 +8,12 @@
 #include <set>
 #include <vector>
 
-#define UNUSED(expr)                                                           \
-  do {                                                                         \
-    (void)(expr);                                                              \
-  } while (0);
+#define UNUSED(expr)                                                                               \
+    do                                                                                             \
+    {                                                                                              \
+        (void)(expr);                                                                              \
+    }                                                                                              \
+    while (0);
 
 using namespace WinCan::Spirallo;
 
@@ -20,10 +22,9 @@ namespace fs = std::filesystem;
 inline std::filesystem::path tofDataDirRoot{R"(D:/Projects/Spirallo/RCX100_ToF)"};
 inline std::filesystem::path genericDataDirRoot{R"(D:/Projects/Spirallo/_DUMMY_DATA)"};
 
-void setup_philipp_1(
-    std::vector<std::filesystem::path>& tofFiles,
-    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof) {
-
+void setup_philipp_1(std::vector<std::filesystem::path>& tofFiles,
+                     OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof)
+{
     std::filesystem::path rootDir{tofDataDirRoot / "Philipp"};
 
     tofFiles = {{
@@ -43,13 +44,13 @@ void setup_philipp_1(
     }};
     outsiderDataPointsHandlingStrategyForTof = OutliersHandlingStrategy::Keep;
 
-  UNUSED(outsiderDataPointsHandlingStrategyForTof);
+    UNUSED(outsiderDataPointsHandlingStrategyForTof);
 }
 
 void setup_marcin_2025_08_13_TOF_Spirallo(
     std::vector<std::filesystem::path>& tofFiles,
-    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof) {
-
+    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof)
+{
     std::filesystem::path rootDir{tofDataDirRoot / "Marcin" / "2025_08_13_TOF_Spirallo"};
     std::vector<std::string> filenames{{
         "0cbc1fa9-c7f7-444d-a2f1-6867b368729c.ini",
@@ -72,10 +73,9 @@ void setup_marcin_2025_08_13_TOF_Spirallo(
     UNUSED(outsiderDataPointsHandlingStrategyForTof);
 }
 
-void setup_rajeesh_manual_fix(
-    std::vector<std::filesystem::path>& tofFiles,
-    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof) {
-
+void setup_rajeesh_manual_fix(std::vector<std::filesystem::path>& tofFiles,
+                              OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof)
+{
     std::filesystem::path rootDir{tofDataDirRoot / "Philipp"};
     tofFiles.clear();
     tofFiles.push_back(rootDir / "rcx100v_dn315_spirello2_2025_08_07_2_FIXED.ini");
@@ -87,8 +87,8 @@ void setup_rajeesh_manual_fix(
 
 void setup_albert_generic_diamond(
     std::vector<std::filesystem::path>& tofFiles,
-    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof) {
-
+    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof)
+{
     std::filesystem::path rootDir{genericDataDirRoot / "Perfect_ToF_Albert"};
     tofFiles.clear();
     tofFiles.push_back(rootDir / "perfectToF_square.ini");
@@ -98,10 +98,9 @@ void setup_albert_generic_diamond(
     UNUSED(outsiderDataPointsHandlingStrategyForTof);
 }
 
-void setup_pawel_generic_square(
-    std::vector<std::filesystem::path>& tofFiles,
-    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof) {
-
+void setup_pawel_generic_square(std::vector<std::filesystem::path>& tofFiles,
+                                OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof)
+{
     std::filesystem::path rootDir{genericDataDirRoot / "Perfect_ToF_Pawel"};
     tofFiles.clear();
     tofFiles.push_back(rootDir / "perfectToF_square.ini");
@@ -111,11 +110,11 @@ void setup_pawel_generic_square(
     UNUSED(outsiderDataPointsHandlingStrategyForTof);
 }
 
-void setup_tof_with_sensor_ids(
-    std::vector<std::filesystem::path>& tofFiles,
-    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof) {
-
-    std::filesystem::path rootDir{tofDataDirRoot / "Marcin" / "2025_11_19_TOF" / "Module" / "Spirallo"};
+void setup_tof_with_sensor_ids(std::vector<std::filesystem::path>& tofFiles,
+                               OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof)
+{
+    std::filesystem::path rootDir{tofDataDirRoot / "Marcin" / "2025_11_19_TOF" / "Module"
+                                  / "Spirallo"};
     tofFiles.clear();
     tofFiles.push_back(rootDir / "2025_11_19_13_10_04.ini");
 
@@ -124,11 +123,11 @@ void setup_tof_with_sensor_ids(
     UNUSED(outsiderDataPointsHandlingStrategyForTof);
 }
 
-void setup_ToF_speed_100p(
-    std::vector<std::filesystem::path>& tofFiles,
-    OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof) {
-
-    std::filesystem::path rootDir{tofDataDirRoot / "TOF_RCX100H_DN315_Speed100" / "Module" / "Laser" / "Spirallo"};
+void setup_ToF_speed_100p(std::vector<std::filesystem::path>& tofFiles,
+                          OutliersHandlingStrategy& outsiderDataPointsHandlingStrategyForTof)
+{
+    std::filesystem::path rootDir{tofDataDirRoot / "TOF_RCX100H_DN315_Speed100" / "Module" / "Laser"
+                                  / "Spirallo"};
     tofFiles.clear();
     tofFiles.push_back(rootDir / "TOF_0001.ini");
 
