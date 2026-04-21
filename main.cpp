@@ -4,12 +4,13 @@
 #include "DatasetsConfig.hpp"
 #include "ExtrasSetups_ParallelLaser.hpp"
 #include "ExtrasSetups_ToF.hpp"
-#include "SanityTestsSetups_ParallelLaser.hpp"
+#include "FileIO/Path.hpp"
+#include "SanityTestsSetups_ParallelLaser_Naive.hpp"
+#include "SanityTestsSetups_ParallelLaser_VX.hpp"
 #include "Types.hpp"
 #include "spirallolib.hpp"
 
 #include <cmath>
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -20,21 +21,19 @@
 using namespace WinCan::Spirallo;
 using namespace WinCan::Spirallo::Benchmark;
 
-namespace fs = std::filesystem;
-
-const fs::path spiralloDir{R"(D:\Development\Spirallo\WinCanSpiralloComponent)"};
-const fs::path defaultCameraConfigPath = spiralloDir / "configs/ParallelLaserDevices.json";
-const fs::path defaultImageProcessingConfigPath =
+const Path spiralloDir{R"(D:\Development\Spirallo\WinCanSpiralloComponent)"};
+const Path defaultCameraConfigPath = spiralloDir / "configs/ParallelLaserDevices.json";
+const Path defaultImageProcessingConfigPath =
     spiralloDir / "configs" / parallelLaserPresetsFilename;
 
-const fs::path outputDir{R"(D:\Development\Spirallo\_Spirallo_OUT)"};
-// const fs::path
+const Path outputDir{R"(D:\Development\Spirallo\_Spirallo_OUT)"};
+// const Path
 // outputDir{R"(C:\WinCan_Projects\2025_07_25\Video\Sec\Spirallo)"};
-const fs::path archiveDir{outputDir / "Archive"};
-const fs::path toFixDir{outputDir / "ToFix"};
+const Path archiveDir{outputDir / "Archive"};
+const Path toFixDir{outputDir / "ToFix"};
 
-const fs::path analysisOutputRootDir{"D:\\Projects\\Spirallo\\Analysis"};
-const fs::path framesOutputRootDir{"D:\\Projects\\Spirallo\\Benchmark_Frames"};
+const Path analysisOutputRootDir{"D:\\Projects\\Spirallo\\Analysis"};
+const Path framesOutputRootDir{"D:\\Projects\\Spirallo\\Benchmark_Frames"};
 
 enum class RunMode
 {
@@ -56,9 +55,9 @@ int main(int argc, char* argv[])
     using WinCan::Spirallo::END_OF_VIDEO_TIME;
     using WinCan::Spirallo::Analyzer::AnalysisTarget;
 
-    fs::path videoPath;
-    fs::path vifPath;
-    fs::path robotCsvFile;
+    Path videoPath;
+    Path vifPath;
+    Path robotCsvFile;
 
     std::string setup; // Which configuration to test?
 
@@ -67,7 +66,7 @@ int main(int argc, char* argv[])
     std::optional<RealDistance_t> crossSectionsStepSize{};
     DistanceUnit projectDistanceUnit{DistanceUnit::Unknown};
 
-    std::vector<std::filesystem::path> tofFiles;
+    std::vector<Path> tofFiles;
     OutliersHandlingStrategy outsiderDataPointsHandlingStrategyForTof;
 
     // ==================================
@@ -208,7 +207,7 @@ int main(int argc, char* argv[])
 
     // ------
 
-    auto runMode{RunMode::DistancesPxToObj};
+    auto runMode{RunMode::VideoToObj};
     // VideoToObj | FrameAnalysis | DistancesPxToObj | CsvToObj | VideoSplit |
     // VerifyVideoExtractor | VideoToObjNoTime | Tof
 
@@ -308,22 +307,22 @@ int main(int argc, char* argv[])
             // setup_SanityTest__VX_17_6__RCX100_crawler20p_camera100p
             // SPR-17: setup_peak_3 ; setup_Jacsonville
             // SPR-20: setup_SanityTest__2026_01_14_Spirallo_Laser_VX_18_1__crawler70p_camera70p
-            setup_SPR23_Sec1(recordingIdStr,
-                             videoPath,
-                             vifPath,
-                             cameraName,
-                             projectDistanceUnit,
-                             startTime,
-                             stopTime,
-                             crossSectionsDistancesAlongPipe,
-                             imageProcessingConfigPath,
-                             cameraConfigPath,
-                             framesOutputDir,
-                             calibrationSlope,
-                             calibrationIntercept,
-                             robotCsvFile,
-                             distancesCsvFilepath,
-                             videoParametersFilepath);
+            setup_SPR36_mpeg_test(recordingIdStr,
+                                  videoPath,
+                                  vifPath,
+                                  cameraName,
+                                  projectDistanceUnit,
+                                  startTime,
+                                  stopTime,
+                                  crossSectionsDistancesAlongPipe,
+                                  imageProcessingConfigPath,
+                                  cameraConfigPath,
+                                  framesOutputDir,
+                                  calibrationSlope,
+                                  calibrationIntercept,
+                                  robotCsvFile,
+                                  distancesCsvFilepath,
+                                  videoParametersFilepath);
         }
 
         std::cout << "Processing recording (actual): " << recordingIdStr << std::endl;
@@ -334,11 +333,11 @@ int main(int argc, char* argv[])
         case RunMode::VideoToObj:
         {
             res = WinCan::Spirallo::generatePipeGeometryObjFileFromVideo(
-                videoPath.string(),
-                vifPath.string(),
-                outputDir.string(),
-                cameraConfigPath.string(),
-                imageProcessingConfigPath.string(),
+                videoPath.toStdPath(),
+                vifPath.toStdPath(),
+                outputDir.toStdPath(),
+                cameraConfigPath.toStdPath(),
+                imageProcessingConfigPath.toStdPath(),
                 cameraName,
                 startTime,
                 stopTime,
@@ -351,11 +350,11 @@ int main(int argc, char* argv[])
         case RunMode::VideoToObjNoTime:
         {
             res = WinCan::Spirallo::generatePipeGeometryObjFileFromVideo(
-                videoPath.string(),
-                vifPath.string(),
-                outputDir.string(),
-                cameraConfigPath.string(),
-                imageProcessingConfigPath.string(),
+                videoPath.toStdPath(),
+                vifPath.toStdPath(),
+                outputDir.toStdPath(),
+                cameraConfigPath.toStdPath(),
+                imageProcessingConfigPath.toStdPath(),
                 cameraName);
             break;
         }
@@ -363,19 +362,19 @@ int main(int argc, char* argv[])
         case RunMode::DistancesPxToObj:
         {
             res = WinCan::Spirallo::generatePipeGeometryObjFileFromDistancesCsv(
-                distancesCsvFilepath,
-                videoParametersFilepath,
-                cameraConfigPath.string(),
+                distancesCsvFilepath.toStdPath(),
+                videoParametersFilepath.toStdPath(),
+                cameraConfigPath.toStdPath(),
                 cameraName,
-                vifPath.string(),
-                outputDir.string(),
+                vifPath.toStdPath(),
+                outputDir.toStdPath(),
                 recordingIdStr);
             break;
         }
 
         case RunMode::CsvToObj:
         {
-            if (robotCsvFile.empty())
+            if (! robotCsvFile.exists()) // NOTE: Was '.empty()'.
             {
                 robotCsvFile = robotDataFiles[recordingId];
             }
@@ -388,7 +387,7 @@ int main(int argc, char* argv[])
                 robotCsvFile,
                 crossSectionsDistancesAlongPipe,
                 crossSectionsStepSize,
-                outputDir.string());
+                outputDir);
             break;
         }
 
@@ -396,8 +395,8 @@ int main(int argc, char* argv[])
         {
             std::cout << "Analyzing individual frames..." << std::endl;
 
-            std::filesystem::path analysisOutputDir{analysisOutputRootDir / recordingIdStr};
-            std::filesystem::create_directory(analysisOutputDir);
+            Path analysisOutputDir{analysisOutputRootDir / recordingIdStr};
+            analysisOutputDir.createDirectories();
 
             using namespace WinCan::Spirallo::Analyzer;
 
@@ -410,12 +409,12 @@ int main(int argc, char* argv[])
             // FIXME: Debug.
             timeSpan = std::nullopt;
 
-            res = WinCan::Spirallo::Analyzer::analyzeVideoFrames(videoPath.string(),
+            res = WinCan::Spirallo::Analyzer::analyzeVideoFrames(videoPath,
                                                                  frameIds,
-                                                                 vifPath.string(),
+                                                                 vifPath,
                                                                  recordingIdStr,
-                                                                 cameraConfigPath.string(),
-                                                                 imageProcessingConfigPath.string(),
+                                                                 cameraConfigPath,
+                                                                 imageProcessingConfigPath,
                                                                  cameraName,
                                                                  analysisTarget,
                                                                  crossSectionsDistancesAlongPipe,
@@ -426,20 +425,20 @@ int main(int argc, char* argv[])
 
         case RunMode::VideoSplit:
         {
-            std::filesystem::create_directory(framesOutputDir);
+            framesOutputDir.createDirectories();
             std::cout << "Writing frames to: " << framesOutputDir << std::endl;
             res = WinCan::Spirallo::Analyzer::splitVideoIntoFrames(
-                recordingIdStr, videoPath.string(), framesOutputDir.string());
+                recordingIdStr, videoPath, framesOutputDir);
             break;
         }
 
         case RunMode::VerifyVideoExtractor:
         {
             res = WinCan::Spirallo::Analyzer::verifyVideoMeasurementDataExtractor(
-                videoPath.string(),
-                vifPath.string(),
-                cameraConfigPath.string(),
-                imageProcessingConfigPath.string(),
+                videoPath,
+                vifPath,
+                cameraConfigPath,
+                imageProcessingConfigPath,
                 cameraName,
                 {0, 300, 500, 700});
             break;
@@ -447,17 +446,17 @@ int main(int argc, char* argv[])
 
         case RunMode::Tof:
         {
-            vifPath =
-                R"(D:\Development\Spirallo\spirallo_runner/data/dummyVifData.txt)"; // FIXME: Use
-                                                                                    // relative
-                                                                                    // path.
+            vifPath = Path{
+                R"(D:\Development\Spirallo\spirallo_runner/data/dummyVifData.txt)"}; // FIXME: Use
+                                                                                     // relative
+                                                                                     // path.
             std::string outsiderDataPointsHandlingStrategyForTofStr{
                 handlingStrategyLabels.at(outsiderDataPointsHandlingStrategyForTof)};
             for (const auto& tofDataPath : tofFiles)
             {
                 res = WinCan::Spirallo::generatePipeGeometryObjFileFromTofData(
-                    tofDataPath.string(),
-                    outputDir.string(),
+                    tofDataPath.toStdPath(),
+                    outputDir.toStdPath(),
                     std::nullopt,
                     std::make_optional(outsiderDataPointsHandlingStrategyForTofStr));
             }

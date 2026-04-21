@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-fs::path getRootDir(const RecordingId recordingId)
+Path getRootDir(const RecordingId recordingId)
 {
     for (const auto& [key, val] : recordingsCategories)
     // for (auto const& entry : recordingsCategories)
@@ -29,13 +29,13 @@ fs::path getRootDir(const RecordingId recordingId)
         std::cout << "[WARN] 'Extra' recordingId not belonging to any category - "
                      "returning a dummy path."
                   << std::endl;
-        return std::filesystem::path{"DUMMY"};
+        return Path{"DUMMY"};
     }
 
     throw std::runtime_error("RecordingId not belonging to any category!");
 }
 
-std::unordered_map<RecordingCategory, fs::path> recordingsRootDirs{
+std::unordered_map<RecordingCategory, Path> recordingsRootDirs{
     {RecordingCategory::iPEK, spiralloVideosRootDir / "iPEK"},
     {RecordingCategory::Jim, spiralloVideosRootDir / "Jim"},
     {RecordingCategory::Dobrzanski, spiralloVideosRootDir / "Tomasz_Dobrzanski"},
@@ -122,9 +122,9 @@ std::unordered_map<RecordingCategory, std::set<RecordingId>> recordingsCategorie
     // },
 };
 
-const fs::path defaultOutputDir{"C:\\Development\\Spirallo\\_Spirallo_OUT"};
+const Path defaultOutputDir{"C:\\Development\\Spirallo\\_Spirallo_OUT"};
 const std::string ARCHIVE_DIR{"Archive"};
-std::unordered_map<RecordingId, fs::path> robotDataFiles{
+std::unordered_map<RecordingId, Path> robotDataFiles{
     // {RecordingId::Jim11_18in_lab, defaultOutputDir / ARCHIVE_DIR /
     // "jim011_robot.csv"},
     {RecordingId::Jim11_18in_lab, defaultOutputDir / ARCHIVE_DIR / "jim011_robot_scaled.csv"},
@@ -141,9 +141,9 @@ std::unordered_map<RecordingId, fs::path> robotDataFiles{
     {RecordingId::Talha10_RCX100, defaultOutputDir / "ToFix" / "Talha10_RCX100_robot.csv"},
 };
 
-std::unordered_map<RecordingId, fs::path> distancesPxDataFiles{
+std::unordered_map<RecordingId, Path> distancesPxDataFiles{
     {RecordingId::Talha9_RCX100, defaultOutputDir / "ToFix" / "Talha9_RCX100_dist_px.csv"},
 };
-std::unordered_map<RecordingId, fs::path> videoParametersDataFiles{
+std::unordered_map<RecordingId, Path> videoParametersDataFiles{
     {RecordingId::Talha9_RCX100, defaultOutputDir / "ToFix" / "Talha9_RCX100_video_params.json"},
 };
